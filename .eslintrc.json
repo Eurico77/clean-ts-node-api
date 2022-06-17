@@ -22,6 +22,7 @@
     }
   },
   "rules": {
+    "no-restricted-syntax": ["error", "ForOfStatement", "WithStatement"],
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -40,7 +41,8 @@
         ]
       }
     ],
-    "@typescript-eslint/explicit-function-return-type": ["error"]
+    "@typescript-eslint/explicit-function-return-type": ["error"],
+    "@no-restricted-syntax": ["WithStatement"]
   }
 
 }
