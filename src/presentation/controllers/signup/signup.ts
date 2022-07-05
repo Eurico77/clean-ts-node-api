@@ -42,10 +42,6 @@ export class SignUpController implements Controller {
         email,
         password,
       });
-      // return {
-      //   statusCode: 201,
-      //   body: account,
-      // };
     } catch (error) {
       return serverError();
     }
