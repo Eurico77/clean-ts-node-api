@@ -31,6 +31,7 @@
       }
     ],
     "no-useless-constructor":"off",
+    "object-curly-newline":"off",
     "no-promise-executor-return": "off",
     "max-classes-per-file": "off",
     "import/prefer-default-export": "off",
