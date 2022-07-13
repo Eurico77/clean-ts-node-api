@@ -27,9 +27,7 @@ export class SignUpController implements Controller {
           return badRequest(new MissingParamError(field));
         }
       }
-      const {
-        name, email, password, passwordConfirmation,
-      } = httpRequest.body;
+      const { name, email, password, passwordConfirmation } = httpRequest.body;
       if (password !== passwordConfirmation) {
         return badRequest(new InvalidParamError('passwordConfirmation'));
       }
@@ -44,6 +42,7 @@ export class SignUpController implements Controller {
       });
       return ok(account);
     } catch (error) {
+      console.error(error);
       return serverError();
     }
   }
