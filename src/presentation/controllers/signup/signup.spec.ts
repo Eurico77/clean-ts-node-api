@@ -1,9 +1,14 @@
 import {
-  InvalidParamError, MissingParamError, ServerError,
+  InvalidParamError,
+  MissingParamError,
+  ServerError,
 } from '../../errors';
 import { SignUpController } from './signup';
 import {
-  EmailValidator, AccountModel, AddAccount, AddAccountParams,
+  EmailValidator,
+  AccountModel,
+  AddAccount,
+  AddAccountParams,
 } from './signup-protocols';
 
 const makeEmailValidator = (): EmailValidator => {
@@ -189,9 +194,11 @@ describe('SignUp Controller', () => {
 
   it('Should return 500 if AddAccount throws ', async () => {
     const { sut, addAccountStub } = makeSut();
-    jest.spyOn(addAccountStub, 'add').mockImplementationOnce(() => {
-      throw new Error();
-    });
+    jest
+      .spyOn(addAccountStub, 'add')
+      .mockImplementationOnce(
+        async () => new Promise((resolve, reject) => reject(new Error())),
+      );
     const httpRequest = {
       body: {
         name: 'any_name',
