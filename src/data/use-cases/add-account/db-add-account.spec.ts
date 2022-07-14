@@ -50,6 +50,7 @@ describe('DbAddAccount UseCase', () => {
       email: 'valid_email@mail.com',
       password: 'valid_password',
     };
+
     const accountPromise = sut.add(accountData);
     expect(accountPromise).rejects.toThrow();
   });

@@ -1,11 +1,11 @@
 import { AccountModel } from '../entities/account';
 
-export interface AddAccountParams {
+export interface AddAccountData {
   name: string;
   email: string;
   password: string;
 }
 
 export interface AddAccount {
-  add(account: AddAccountParams): Promise<AccountModel>;
+  add(account: AddAccountData): Promise<AccountModel>;
 }
