@@ -1,10 +1,31 @@
-import { Encrypter } from '../../contracts/encrypter';
 import { DbAddAccount } from './db-add-account';
+import { AddAccountData,
+  AccountModel,
+  Encrypter,
+  AddAccountRepository,
+} from './db-add-account-protocols';
 
 interface SutTypes {
   sut: DbAddAccount;
+  addAccountRepositoryStub: AddAccountRepository;
   encrypterStub: Encrypter;
 }
+
+const makeFakeAccountData = (): AccountModel => ({
+  id: 'valid_id',
+  name: 'any_name',
+  email: 'valid_email@mail.com',
+  password: 'hash_password',
+});
+
+const makeAddAccountRepositoryStub = (): AddAccountRepository => {
+  class AddAccountRepositoryStub implements AddAccountRepository {
+    async add(accountData: AddAccountData): Promise<AccountModel> {
+      return new Promise((resolve) => resolve(makeFakeAccountData()));
+    }
+  }
+  return new AddAccountRepositoryStub();
+};
 
 const makeEncrypter = (): Encrypter => {
   class EncrypterStub implements Encrypter {
@@ -16,11 +37,13 @@ const makeEncrypter = (): Encrypter => {
 };
 
 const makeSut = (): SutTypes => {
+  const addAccountRepositoryStub = makeAddAccountRepositoryStub();
   const encrypterStub = makeEncrypter();
-  const sut = new DbAddAccount(encrypterStub);
+  const sut = new DbAddAccount(encrypterStub, addAccountRepositoryStub);
   return {
     sut,
     encrypterStub,
+    addAccountRepositoryStub,
   };
 };
 
@@ -53,5 +76,24 @@ describe('DbAddAccount UseCase', () => {
 
     const accountPromise = sut.add(accountData);
     expect(accountPromise).rejects.toThrow();
+  });
+
+  it('Should call addAccountRepository with correct values', async () => {
+    const { sut, addAccountRepositoryStub } = makeSut();
+    const addSpy = jest.spyOn(addAccountRepositoryStub, 'add');
+
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'valid_password',
+    };
+
+    await sut.add(accountData);
+    expect(addSpy).toHaveBeenCalledWith({
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'hashed_password',
+    });
+    expect(addSpy).toHaveBeenCalledTimes(1);
   });
 });

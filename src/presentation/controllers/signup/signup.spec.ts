@@ -8,7 +8,7 @@ import {
   EmailValidator,
   AccountModel,
   AddAccount,
-  AddAccountParams,
+  AddAccountData,
 } from './signup-protocols';
 
 const makeEmailValidator = (): EmailValidator => {
@@ -22,7 +22,7 @@ const makeEmailValidator = (): EmailValidator => {
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add(account: AddAccountParams): Promise<AccountModel> {
+    async add(account: AddAccountData): Promise<AccountModel> {
       const fakerAccount = {
         id: 'valid_id',
         name: 'valid_name',
