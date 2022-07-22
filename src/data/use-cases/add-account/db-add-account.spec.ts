@@ -1,5 +1,6 @@
 import { DbAddAccount } from './db-add-account';
-import { AddAccountData,
+import {
+  AddAccountData,
   AccountModel,
   Encrypter,
   AddAccountRepository,
@@ -65,8 +66,11 @@ describe('DbAddAccount UseCase', () => {
 
   it('Should throw if encrypter throws', async () => {
     const { sut, encrypterStub } = makeSut();
-    jest.spyOn(encrypterStub, 'encrypt')
-      .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+    jest
+      .spyOn(encrypterStub, 'encrypt')
+      .mockReturnValueOnce(
+        new Promise((resolve, reject) => reject(new Error())),
+      );
 
     const accountData = {
       name: 'valid_name',
@@ -99,8 +103,11 @@ describe('DbAddAccount UseCase', () => {
 
   it('Should throw if addAccountRepository throws', async () => {
     const { sut, addAccountRepositoryStub } = makeSut();
-    jest.spyOn(addAccountRepositoryStub, 'add')
-      .mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+    jest
+      .spyOn(addAccountRepositoryStub, 'add')
+      .mockReturnValueOnce(
+        new Promise((resolve, reject) => reject(new Error())),
+      );
 
     const accountData = {
       name: 'valid_name',
@@ -110,5 +117,22 @@ describe('DbAddAccount UseCase', () => {
 
     const accountPromise = sut.add(accountData);
     expect(accountPromise).rejects.toThrow();
+  });
+
+  it('Should return an account with on success', async () => {
+    const { sut } = makeSut();
+
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'valid_password',
+    };
+
+    const account = await sut.add(accountData);
+    expect(account).toEqual(makeFakeAccountData());
+    expect(account).toHaveProperty('id');
+    expect(account).toHaveProperty('name');
+    expect(account).toHaveProperty('email');
+    expect(account).toHaveProperty('password');
   });
 });
